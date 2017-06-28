@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SimpleWeather</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sodales, metus sit amet pulvinar porttitor, nunc metus porttitor diam, eu auctor sapien tortor a elit. Fusce magna mi, placerat sed semper vel, congue non ligula. Nam lobortis ipsum nec sapien congue, a gravida nisi posuere. Donec suscipit, libero eget ullamcorper commodo, enim velit luctus dolor, eu elementum erat risus sed nisi. Sed aliquam turpis eu est fringilla, vitae fringilla dolor congue. Nullam sollicitudin suscipit vehicula. Curabitur a augue a metus tristique feugiat id egestas libero. Vestibulum tellus nisi, dapibus non erat eget, vehicula fringilla ex. Quisque sit amet urna vitae lacus gravida mollis. Integer magna metus, commodo non metus sed, venenatis commodo nunc. Integer efficitur diam eget metus elementum, non vestibulum sapien tincidunt. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+    <string name="add_city">Add City</string>
+</resources>
