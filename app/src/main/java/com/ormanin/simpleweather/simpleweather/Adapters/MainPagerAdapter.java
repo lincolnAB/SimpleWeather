@@ -5,10 +5,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.ormanin.simpleweather.simpleweather.MainPage.MainViewPagerFragment;
-import com.ormanin.simpleweather.simpleweather.Model.CityPOJO;
+import com.ormanin.simpleweather.simpleweather.Model.Weather.CurrentWeatherPresenter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by patrykormanin on 26/06/2017.
@@ -16,13 +15,13 @@ import java.util.List;
 
 public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
-    private ArrayList<CityPOJO> mData = new ArrayList<>();
+    private ArrayList<CurrentWeatherPresenter> mData = new ArrayList<>();
 
-    public ArrayList<CityPOJO> getData() {
+    public ArrayList<CurrentWeatherPresenter> getData() {
         return mData;
     }
 
-    public void setData(ArrayList<CityPOJO> mData) {
+    public void setData(ArrayList<CurrentWeatherPresenter> mData) {
         this.mData = mData;
         notifyDataSetChanged();
     }
@@ -41,5 +40,12 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return mData.size();
+    }
+
+    public CurrentWeatherPresenter getDataAt(int position) {
+        if(mData.size() < position)
+            return null;
+
+        return mData.get(position);
     }
 }

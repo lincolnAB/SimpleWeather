@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.ormanin.simpleweather.simpleweather.MainPage.AddCity.AddCityFragment.OnListFragmentInteractionListener;
 import com.ormanin.simpleweather.simpleweather.MainPage.AddCity.dummy.DummyContent.DummyItem;
+import com.ormanin.simpleweather.simpleweather.Model.SuggestionsModel.Prediction;
 import com.ormanin.simpleweather.simpleweather.R;
 
 import java.util.List;
@@ -19,10 +20,10 @@ import java.util.List;
  */
 public class AddCityRecyclerViewAdapter extends RecyclerView.Adapter<AddCityRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Prediction> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public AddCityRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public AddCityRecyclerViewAdapter(List<Prediction> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -37,8 +38,8 @@ public class AddCityRecyclerViewAdapter extends RecyclerView.Adapter<AddCityRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(mValues.get(position).getDescription());
+//        holder.mContentView.setText(mValues.get(position).content);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +62,7 @@ public class AddCityRecyclerViewAdapter extends RecyclerView.Adapter<AddCityRecy
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public Prediction mItem;
 
         public ViewHolder(View view) {
             super(view);
@@ -74,5 +75,8 @@ public class AddCityRecyclerViewAdapter extends RecyclerView.Adapter<AddCityRecy
         public String toString() {
             return super.toString() + " '" + mContentView.getText() + "'";
         }
+    }
+
+    public void setData(Prediction data) {
     }
 }

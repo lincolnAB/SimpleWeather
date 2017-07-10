@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="@string/add_city" android:id="@+id/menu_add_city_item" />
-    <item android:title="lorem" />
-    <item android:title="lorem" />
+    <item
+        android:id="@+id/menu_change_graphics_item"
+        android:title="@string/change_background" />
+    <item
+        android:id="@+id/menu_refresh_item"
+        android:title="@string/refresh" />
+    <item
+        android:id="@+id/menu_delete_item"
+        android:title="@string/delete_city" />
 </menu>

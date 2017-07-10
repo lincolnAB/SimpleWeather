@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -26,9 +27,19 @@ public class DummyContent {
     private static final int COUNT = 25;
 
     static {
+        Random rand = new Random();
         // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
-            addItem(createDummyItem(i));
+            addItem(createDummyItem(rand.nextInt(40)));
+        }
+    }
+
+    public static void resfreshCollection() {
+        Random rand = new Random();
+        ITEMS.clear();
+        // Add some sample items.
+        for (int i = 1; i <= COUNT; i++) {
+            addItem(createDummyItem(rand.nextInt(40)));
         }
     }
 
