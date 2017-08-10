@@ -1,4 +1,4 @@
-package com.ormanin.simpleweather.simpleweather.Model.Weather;
+package com.ormanin.simpleweather.simpleweather.Model.POs.CurrentPager;
 
 import com.orm.SugarRecord;
 import com.orm.dsl.Table;
@@ -8,7 +8,7 @@ import com.orm.dsl.Unique;
  * Created by patrykormanin on 29/06/2017.
  */
 
-public class CurrentWeatherPresenter extends SugarRecord {
+public class CurrentWeatherPO extends SugarRecord {
 
     @Unique
     private String placeId;

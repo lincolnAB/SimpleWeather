@@ -1,7 +1,7 @@
-package com.ormanin.simpleweather.simpleweather.Converter;
+package com.ormanin.simpleweather.simpleweather.Converters;
 
 import com.ormanin.simpleweather.simpleweather.Model.CityModel.CityModel;
-import com.ormanin.simpleweather.simpleweather.Model.Weather.CurrentWeatherPresenter;
+import com.ormanin.simpleweather.simpleweather.Model.POs.CurrentPager.CurrentWeatherPO;
 import com.ormanin.simpleweather.simpleweather.Model.WeatherModel.Currently;
 
 /**
@@ -9,8 +9,8 @@ import com.ormanin.simpleweather.simpleweather.Model.WeatherModel.Currently;
  */
 
 public class CurrentWeatherConverter {
-    public static CurrentWeatherPresenter toCurrentWeatherPresenter(CityModel cityModel, Currently weatherModel) {
-        CurrentWeatherPresenter convertedData = new CurrentWeatherPresenter();
+    public static CurrentWeatherPO toCurrentWeatherPresenter(CityModel cityModel, Currently weatherModel) {
+        CurrentWeatherPO convertedData = new CurrentWeatherPO();
         convertedData.setPlaceId(cityModel.getPlaceId());
         convertedData.setImageUrl(cityModel.getBackgroundUrl());
         convertedData.setCityName(cityModel.getCityName());

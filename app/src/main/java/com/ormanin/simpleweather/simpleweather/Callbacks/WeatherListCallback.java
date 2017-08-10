@@ -1,6 +1,6 @@
 package com.ormanin.simpleweather.simpleweather.Callbacks;
 
-import com.ormanin.simpleweather.simpleweather.Model.Weather.CurrentWeatherPresenter;
+import com.ormanin.simpleweather.simpleweather.Model.POs.CurrentPager.CurrentWeatherPO;
 
 import java.util.List;
 
@@ -9,5 +9,5 @@ import java.util.List;
  */
 
 public interface WeatherListCallback {
-    void OnExecutionEnds(List<CurrentWeatherPresenter> weatherData);
+    void OnExecutionEnds(List<CurrentWeatherPO> weatherData);
 }

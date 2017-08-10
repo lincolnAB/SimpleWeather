@@ -1,4 +1,4 @@
-package com.ormanin.simpleweather.simpleweather.Converter;
+package com.ormanin.simpleweather.simpleweather.Converters;
 
 /**
  * Created by patrykormanin on 10/07/2017.

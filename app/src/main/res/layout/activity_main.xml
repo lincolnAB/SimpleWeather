@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:visibility="invisible" />
-            
+
             <!-- TOP BAR -->
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -124,24 +124,32 @@
             android:id="@+id/bottom_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical">
 
-            <com.ormanin.simpleweather.simpleweather.CustomComponents.HorizontalList
-                android:id="@+id/horizontal_list_hourly_weather"
+            <com.ormanin.simpleweather.simpleweather.CustomComponents.CustomLineChart.CustomLineChart
+                android:id="@+id/line_chart_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="@dimen/bigger_margin" />
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="@dimen/bigger_margin"
+                android:layout_marginRight="@dimen/bigger_margin"
+                android:layout_marginTop="10dp"
+                android:visibility="invisible" />
+
         </LinearLayout>
     </LinearLayout>
 
-    <!-- blurry background container --><ImageView
-    android:id="@+id/bgn_image_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    attrs:layout_constraintBottom_toBottomOf="parent"
-    attrs:layout_constraintLeft_toLeftOf="parent"
-    attrs:layout_constraintRight_toRightOf="parent"
-    attrs:layout_constraintTop_toTopOf="parent" />
+    <!-- blurry background container -->
+    <ImageView
+        android:id="@+id/bgn_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        attrs:layout_constraintBottom_toBottomOf="parent"
+        attrs:layout_constraintLeft_toLeftOf="parent"
+        attrs:layout_constraintRight_toRightOf="parent"
+        attrs:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
         android:layout_width="match_parent"

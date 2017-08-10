@@ -15,7 +15,7 @@ public class Daily {
     private String icon;
     @SerializedName("data")
     @Expose
-    private List<Datum_> data = null;
+    private List<DailyItem> data = null;
 
     public String getSummary() {
         return summary;
@@ -33,11 +33,11 @@ public class Daily {
         this.icon = icon;
     }
 
-    public List<Datum_> getData() {
+    public List<DailyItem> getData() {
         return data;
     }
 
-    public void setData(List<Datum_> data) {
+    public void setData(List<DailyItem> data) {
         this.data = data;
     }
 

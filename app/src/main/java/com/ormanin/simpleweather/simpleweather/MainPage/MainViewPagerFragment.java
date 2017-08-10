@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ormanin.simpleweather.simpleweather.Model.Weather.CurrentWeatherPresenter;
+import com.ormanin.simpleweather.simpleweather.Model.POs.CurrentPager.CurrentWeatherPO;
 import com.ormanin.simpleweather.simpleweather.R;
 
 /**
@@ -17,13 +17,13 @@ import com.ormanin.simpleweather.simpleweather.R;
 
 public class MainViewPagerFragment extends Fragment {
 
-    private CurrentWeatherPresenter mData;
+    private CurrentWeatherPO mData;
     private TextView mTextViewTemperature;
     private TextView mTextViewWeatherDesctiption;
     private TextView mTextViewWeatherIcon;
     private TextView mTextViewPlaceDescription;
 
-    public static Fragment newInstance(CurrentWeatherPresenter data) {
+    public static Fragment newInstance(CurrentWeatherPO data) {
         MainViewPagerFragment fragment = new MainViewPagerFragment();
         fragment.mData = data;
 

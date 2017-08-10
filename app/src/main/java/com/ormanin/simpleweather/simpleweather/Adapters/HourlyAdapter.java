@@ -7,13 +7,11 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.TextView;
 
-import com.ormanin.simpleweather.simpleweather.Model.Weather.HourlyWeatherPresenter;
 import com.ormanin.simpleweather.simpleweather.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by patrykormanin on 05/07/2017.

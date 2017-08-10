@@ -24,26 +24,29 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.ormanin.simpleweather.simpleweather.Adapters.Hourly;
-import com.ormanin.simpleweather.simpleweather.Adapters.HourlyAdapter;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.ormanin.simpleweather.simpleweather.Adapters.MainPagerAdapter;
 import com.ormanin.simpleweather.simpleweather.Callbacks.AsyncOperationEndedCallback;
-import com.ormanin.simpleweather.simpleweather.CustomComponents.HorizontalList;
+import com.ormanin.simpleweather.simpleweather.Callbacks.ColorAnimationEndedCallback;
 import com.ormanin.simpleweather.simpleweather.Helpers.BlurBuilder;
+import com.ormanin.simpleweather.simpleweather.Helpers.GlobalInfo;
 import com.ormanin.simpleweather.simpleweather.MainApplication;
 import com.ormanin.simpleweather.simpleweather.MainPage.AddCity.AddCityFragment;
-import com.ormanin.simpleweather.simpleweather.Model.CityModel.CityModel;
 import com.ormanin.simpleweather.simpleweather.Model.Networking.PhotoService;
-import com.ormanin.simpleweather.simpleweather.Model.Networking.WeatherService;
-import com.ormanin.simpleweather.simpleweather.Model.SuggestionsModel.Prediction;
 import com.ormanin.simpleweather.simpleweather.Model.Networking.PlacesService;
-import com.ormanin.simpleweather.simpleweather.Model.Weather.CurrentWeatherPresenter;
-import com.ormanin.simpleweather.simpleweather.Model.Weather.HourlyWeatherPresenter;
+import com.ormanin.simpleweather.simpleweather.Model.Networking.WeatherService;
+import com.ormanin.simpleweather.simpleweather.Model.POs.BottomChart.TemperatureItemPO;
+import com.ormanin.simpleweather.simpleweather.Model.SuggestionsModel.Prediction;
+import com.ormanin.simpleweather.simpleweather.Model.POs.CurrentPager.CurrentWeatherPO;
+import com.ormanin.simpleweather.simpleweather.Model.POs.BottomChart.HourlyWeatherPO;
 import com.ormanin.simpleweather.simpleweather.R;
 import com.rd.PageIndicatorView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private View mBottomContainer;
     private ViewPager mPager;
     private ImageButton mButtonSettings;
-    private HorizontalList mHourlyWeatherHorizontalList;
+    private LineChart mBottomTemperatureChart;
     private View mProgressBar;
 
     //Other
@@ -94,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         mBottomContainer = findViewById(R.id.bottom_container);
         mNoCitiesTextView = findViewById(R.id.text_view_no_cities);
         mLastUpdateTextView = findViewById(R.id.text_view_last_update);
-        mHourlyWeatherHorizontalList = findViewById(R.id.horizontal_list_hourly_weather);
+        mBottomTemperatureChart = findViewById(R.id.line_chart_bottom);
 
         //required view initialization
         mPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
@@ -115,9 +118,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
             @Override
             public void onPageSelected(int position) {
+                mMainPresenter.saveSelectedIndex(position);
                 mSelectedIndex = position;
-                String url = mPagerAdapter.getDataAt(position).getImageUrl();
-                reloadBackground(url);
+                reloadBackgroundAndChart(position);
             }
 
             @Override
@@ -128,11 +131,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         //Dagger injection
         ((MainApplication) getApplication()).getNetComponent().inject(this);
-        mMainPresenter = new MainPresenter(this, mPlacesService, mWeatherService, mPhotoService);
+        mMainPresenter = new MainPresenter(this, mPlacesService, mWeatherService, mPhotoService, getSharedPreferences("test", MODE_PRIVATE));
 
         //view's data initialization
         mMainPresenter.refreshWeatherData();
-        reloadBackground("http://blog.agroknow.com/wp-content/uploads/2016/03/6835100-landscape.jpg");
+        reloadBackground(GlobalInfo.START_BACKGROUND_URL, new ColorAnimationEndedCallback() {
+            @Override
+            public void AnimationHasBeenEnded(int color) {
+
+            }
+        });
     }
 
     @Override
@@ -141,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
-    public void reloadBackground(String url) {
+    public void reloadBackground(String url, final ColorAnimationEndedCallback callback) {
         Glide.with(this)
                 .load(url)
                 .asBitmap()
@@ -158,8 +166,29 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                             @Override
                             public void onGenerated(Palette palette) {
 
-                                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), mBottomContainerColor, palette.getDarkMutedColor(Color.WHITE));
-                                colorAnimation.setDuration(300); // milliseconds
+                                final ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), mBottomContainerColor, palette.getDarkMutedColor(Color.WHITE));
+                                colorAnimation.setDuration(300);
+                                colorAnimation.addListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(Animator animator) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animator animator) {
+                                        callback.AnimationHasBeenEnded((int) colorAnimation.getAnimatedValue());
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(Animator animator) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animator animator) {
+
+                                    }
+                                });
                                 colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
                                     @Override
@@ -189,8 +218,17 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_change_graphics_item:
-                        showBlurredBackground();
-                        Toast.makeText(getApplicationContext(), "Not impl yet :D", Toast.LENGTH_SHORT);
+                        CurrentWeatherPO currentItem = mPagerAdapter.getDataAt(mSelectedIndex);
+                        if(currentItem == null)
+                            break;
+
+                        manageChartVisibility(false);
+                        reloadBackground(mMainPresenter.drawnNewBackgroundForCity(currentItem.getPlaceId()), new ColorAnimationEndedCallback() {
+                            @Override
+                            public void AnimationHasBeenEnded(int color) {
+                                mMainPresenter.refreshWeatherData();
+                            }
+                        });
                         break;
                     case R.id.menu_refresh_item:
                         mMainPresenter.refreshWeatherData();
@@ -199,6 +237,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                         if (mPagerAdapter.getCount() > 0) {
                             mMainPresenter.deleteCity(mPagerAdapter.getDataAt(mPager.getCurrentItem()).getPlaceId());
                             mMainPresenter.refreshWeatherData();
+                        } else {
+                            Toast.makeText(MainActivity.this, R.string.info_delete_no_cities, Toast.LENGTH_SHORT).show();
                         }
                         break;
                 }
@@ -209,15 +249,23 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
-    public void reloadWeatherAdapter(List<CurrentWeatherPresenter> data) {
+    public void reloadWeatherAdapter(List<CurrentWeatherPO> data) {
         if (data == null)
             return;
 
         mPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPagerAdapter.setData(new ArrayList<>(data));
-        mPager.setCurrentItem(mSelectedIndex);
+
+        if (data.size() > 0)
+            mPager.setCurrentItem(mMainPresenter.getSavedSelectedIndex());
+
         mPageIndicator.setViewPager(mPager);
+
+        if(mPagerAdapter.getCount() > mSelectedIndex) {
+            HourlyWeatherPO hourlyPres = mMainPresenter.getHourlyWeatherById(mPagerAdapter.getDataAt(mSelectedIndex).getPlaceId());
+            refreshBottomContainer(hourlyPres, mBottomContainerColor);
+        }
 
         updateLastUpdateControl(mMainPresenter.getFormattedCurrentTime());
     }
@@ -249,24 +297,53 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
-    public void manageNoCitiesText(int collectionSize) {
-        if (collectionSize < 1) mNoCitiesTextView.setVisibility(View.VISIBLE);
+    public void manageNoCitiesText(boolean shouldBeVisible) {
+        if (shouldBeVisible) mNoCitiesTextView.setVisibility(View.VISIBLE);
         else mNoCitiesTextView.setVisibility(View.INVISIBLE);
     }
 
     @Override
-    public void refreshBottomContainer(HourlyWeatherPresenter data) {
-        mHourlyWeatherHorizontalList.setAdapter(new HourlyAdapter(data.getTemperatureData()));
+    public void refreshBottomContainer(HourlyWeatherPO data, int color) {
+
+        List<Entry> values = new ArrayList<>();
+
+        for (int i = 0; i < data.getTemperatureData().size(); i++) {
+            if (i < 24 && i % 4 == 0) {
+                TemperatureItemPO item = data.getTemperatureData().get(i);
+                Entry entry = new Entry(item.getHour(), item.getTemperature(), "Label");
+                values.add(entry);
+            }
+        }
+
+        LineDataSet lineDataSet = new LineDataSet(values, "Label");
+        lineDataSet.setColor(getBrighterColor(color, 1.3f));
+
+        int chartPointColor = getBrighterColor(color, 0.8f);
+        lineDataSet.setCircleColor(chartPointColor);
+        lineDataSet.setCircleColorHole(chartPointColor);
+        lineDataSet.setCircleRadius(5.0f);
+        lineDataSet.setLineWidth(5.0f);
+        lineDataSet.setValueTextSize(10f);
+        lineDataSet.setValueTextColor(Color.WHITE);
+        lineDataSet.setDrawValues(false);
+        //lineDataSet.setValueFormatter(new TemperatureChartValueFormatter());
+
+        LineData lineData = new LineData(lineDataSet);
+
+        manageChartVisibility(true);
+        mBottomTemperatureChart.getXAxis().setLabelCount(values.size(), true);
+        mBottomTemperatureChart.setData(lineData);
+        mBottomTemperatureChart.animateXY(1500, 1500, Easing.EasingOption.EaseInCubic, Easing.EasingOption.EaseInCubic);
+
     }
 
     @Override
     public void manageLoadingIndication(boolean isReloading) {
-        if(isReloading) {
+        if (isReloading) {
             mProgressBar.setVisibility(View.VISIBLE);
             mPager.setVisibility(View.INVISIBLE);
             mNoCitiesTextView.setVisibility(View.INVISIBLE);
-        }
-        else {
+        } else {
             mProgressBar.setVisibility(View.INVISIBLE);
             mPager.setVisibility(View.VISIBLE);
         }
@@ -337,6 +414,40 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             }
         }).start();
 
+    }
+
+    private int getBrighterColor(int color, float factor) {
+        int a = Color.alpha(color);
+        int r = Math.round(Color.red(color) * factor);
+        int g = Math.round(Color.green(color) * factor);
+        int b = Math.round(Color.blue(color) * factor);
+        return Color.argb(a,
+                Math.min(r, 255),
+                Math.min(g, 255),
+                Math.min(b, 255));
+    }
+
+    @Override
+    public void manageChartVisibility(boolean isVisible) {
+        if (isVisible) mBottomTemperatureChart.setVisibility(View.VISIBLE);
+        else mBottomTemperatureChart.setVisibility(View.INVISIBLE);
+    }
+
+    private void reloadBackgroundAndChart(int currentIndex) {
+        if (mPagerAdapter.getCount() == 0)
+            return;
+
+        String url = mPagerAdapter.getDataAt(currentIndex).getImageUrl();
+
+        //todo change impl
+        manageChartVisibility(false);
+        reloadBackground(url, new ColorAnimationEndedCallback() {
+            @Override
+            public void AnimationHasBeenEnded(int color) {
+                HourlyWeatherPO hourlyPres = mMainPresenter.getHourlyWeatherById(mPagerAdapter.getDataAt(mSelectedIndex).getPlaceId());
+                refreshBottomContainer(hourlyPres, color);
+            }
+        });
     }
 
 }

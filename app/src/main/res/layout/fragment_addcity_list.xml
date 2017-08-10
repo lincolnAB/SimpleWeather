@@ -24,7 +24,9 @@
         android:background="@android:color/transparent"
         app:layoutManager="LinearLayoutManager"
         tools:context=".MainPage.AddCity.AddCityFragment"
-        tools:listitem="@layout/fragment_addcity" />
+        tools:listitem="@layout/fragment_addcity"
+        android:requiresFadingEdge="vertical"
+        android:fadingEdgeLength="300dp"/>
 
     <TextView
         android:id="@+id/text_view_no_data"

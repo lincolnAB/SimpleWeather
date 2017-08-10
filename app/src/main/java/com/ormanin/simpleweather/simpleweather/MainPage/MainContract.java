@@ -1,12 +1,11 @@
 package com.ormanin.simpleweather.simpleweather.MainPage;
 
-import android.support.v4.view.ViewPager;
-
 import com.ormanin.simpleweather.simpleweather.BasePresenter;
 import com.ormanin.simpleweather.simpleweather.BaseView;
 import com.ormanin.simpleweather.simpleweather.Callbacks.AsyncOperationEndedCallback;
-import com.ormanin.simpleweather.simpleweather.Model.Weather.CurrentWeatherPresenter;
-import com.ormanin.simpleweather.simpleweather.Model.Weather.HourlyWeatherPresenter;
+import com.ormanin.simpleweather.simpleweather.Callbacks.ColorAnimationEndedCallback;
+import com.ormanin.simpleweather.simpleweather.Model.POs.CurrentPager.CurrentWeatherPO;
+import com.ormanin.simpleweather.simpleweather.Model.POs.BottomChart.HourlyWeatherPO;
 
 import java.util.List;
 
@@ -17,15 +16,16 @@ import java.util.List;
 public interface MainContract {
 
     interface View extends BaseView<Presenter> {
-        void reloadBackground(String url);
+        void reloadBackground(String url, ColorAnimationEndedCallback callback);
         void showMenu();
         void openAddCity(android.view.View clickedView);
         void closeAddCity();
-        void reloadWeatherAdapter(List<CurrentWeatherPresenter> data);
+        void reloadWeatherAdapter(List<CurrentWeatherPO> data);
         void updateLastUpdateControl(String data);
-        void manageNoCitiesText(int collectionSize);
-        void refreshBottomContainer(HourlyWeatherPresenter data);
+        void manageNoCitiesText(boolean shouldBeVisible);
+        void refreshBottomContainer(HourlyWeatherPO data, int chartColor);
         void manageLoadingIndication(boolean isReloading);
+        void manageChartVisibility(boolean isVisible);
     }
 
     interface Presenter extends BasePresenter {
@@ -33,7 +33,10 @@ public interface MainContract {
         void saveLocation(String placeId, AsyncOperationEndedCallback callback);
         String getFormattedCurrentTime();
         void deleteCity(String id);
-        HourlyWeatherPresenter getHourlyWeatherById(String placeId);
+        HourlyWeatherPO getHourlyWeatherById(String placeId);
+        void saveSelectedIndex(int selectedIndex);
+        int getSavedSelectedIndex();
+        String drawnNewBackgroundForCity(String placeId);
     }
 
 }

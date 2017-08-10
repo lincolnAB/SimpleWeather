@@ -4,7 +4,7 @@ package com.ormanin.simpleweather.simpleweather.Model.WeatherModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Datum {
+public class HourlyItem {
 
     @SerializedName("time")
     @Expose

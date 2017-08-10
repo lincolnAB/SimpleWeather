@@ -8,16 +8,16 @@ public class Term {
 
     @SerializedName("offset")
     @Expose
-    private Integer offset;
+    private Double offset;
     @SerializedName("value")
     @Expose
     private String value;
 
-    public Integer getOffset() {
+    public Double getOffset() {
         return offset;
     }
 
-    public void setOffset(Integer offset) {
+    public void setOffset(Double offset) {
         this.offset = offset;
     }
 
